@@ -277,6 +277,7 @@
  
   .panel { display: none; animation: fadeIn 0.5s ease; }
   .panel.active { display: block; }
+  .panel-header { display: none; }
  
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(12px); }
@@ -823,23 +824,91 @@
     .prepared-name { font-size: 1.3rem; }
     .prepared-right { text-align: left; }
  
-    /* Tabs - horizontal scroll on mobile */
-    .tabs {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      margin-bottom: 32px;
-      padding: 5px;
+    /* Hide tab nav on mobile - use accordion instead */
+    .tabs { display: none; }
+ 
+    /* All panels visible on mobile as accordion items */
+    .panel {
+      display: block !important;
+      margin-bottom: 12px;
+      animation: none;
     }
-    .tabs::-webkit-scrollbar { display: none; }
-    .tab {
-      flex: 0 0 auto;
-      min-width: auto;
-      padding: 11px 14px;
+ 
+    .panel-header {
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 20px 22px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      font-weight: 600;
+      text-align: left;
+      transition: all 0.25s ease;
+    }
+ 
+    .panel-header-num {
       font-size: 10px;
-      white-space: nowrap;
+      opacity: 0.6;
+      margin-right: 10px;
     }
+ 
+    .panel-header-title {
+      flex: 1;
+    }
+ 
+    .panel-header-icon {
+      font-size: 18px;
+      line-height: 1;
+      color: var(--gold);
+      transition: transform 0.3s ease;
+      margin-left: 12px;
+    }
+ 
+    .panel.is-open .panel-header {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(124,63,196,0.15) 0%, rgba(212,175,55,0.08) 100%);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+ 
+    .panel.is-open .panel-header-icon {
+      transform: rotate(45deg);
+    }
+ 
+    .panel-body {
+      display: none;
+      padding: 24px 20px 32px;
+      border: 1px solid var(--glass-border);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      background: rgba(10, 4, 24, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+ 
+    .panel.is-open .panel-body {
+      display: block;
+      animation: accordionOpen 0.35s ease;
+    }
+ 
+    @keyframes accordionOpen {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+ 
+    /* Hide the original .section-label inside accordions (redundant with header) */
+    .panel-body > .section-label { display: none; }
+    .panel-body > h2 { font-size: 1.6rem; margin-top: 0; margin-bottom: 14px; }
  
     /* Headings */
     h2 { font-size: 1.7rem; }
@@ -904,7 +973,7 @@
     .check-group { padding: 22px 22px; }
     .check-item { padding: 11px 0; gap: 12px; }
     .check-text { font-size: 13.5px; }
-    .progress-wrap { padding: 14px 18px; top: 8px; }
+    .progress-wrap { position: static; padding: 14px 18px; }
  
     /* Closing note */
     .closing-note { padding: 28px 24px; margin-top: 48px; }
@@ -966,6 +1035,7 @@
     <button class="tab" data-panel="mics"><span class="tab-num">04</span>Microphones</button>
     <button class="tab" data-panel="stream"><span class="tab-num">05</span>Stream &amp; Record</button>
     <button class="tab" data-panel="checklist"><span class="tab-num">06</span>Checklist</button>
+    <button class="tab" data-panel="troubleshoot"><span class="tab-num">07</span>Troubleshooting</button>
   </nav>
  
   <section class="panel active" id="flow">
@@ -1350,6 +1420,141 @@
     </div>
   </section>
  
+  <section class="panel" id="troubleshoot">
+    <div class="section-label">Section 07</div>
+    <h2>Troubleshooting</h2>
+    <p>When something goes wrong mid-service, you don't have time to Google. Here are the issues that come up most often in a church audio setup and how to fix them fast.</p>
+ 
+    <h3>Feedback (squeal or ringing)</h3>
+    <div class="callout">
+      <div class="callout-label">⚠ Symptom</div>
+      <p>A high-pitched squeal, ringing, or howl coming from the speakers, usually when a mic is opened or pointed the wrong way.</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-title">Pull the offending channel down first</div>
+        <div class="step-body">Identify which mic is feeding back (usually the loudest or newest-opened one) and drop its fader. Don't cut the master — you'll kill everything.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Check mic position</div>
+        <div class="step-body">Feedback almost always starts when a mic is pointed at a speaker or monitor. Move the mic behind the speaker's dispersion angle, or lower the monitor feeding it.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Notch the problem frequency</div>
+        <div class="step-body">Common feedback frequencies are around <code>250 Hz</code> (boomy), <code>1 kHz</code> (honky), and <code>4 kHz</code> (piercing). Cut 3–6 dB with a narrow Q on the offending channel's EQ.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Reduce overall gain before the service</div>
+        <div class="step-body">If feedback is constant, the system is overdriven. Lower the main fader by 3 dB and ring out again during soundcheck with every mic open.</div>
+      </li>
+    </ol>
+ 
+    <h3>Hum or buzz (60Hz ground loop)</h3>
+    <div class="callout">
+      <div class="callout-label">⚠ Symptom</div>
+      <p>A constant low-frequency hum or buzz in the speakers, camera recording, or stream, usually only when certain gear is powered on.</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-title">Unplug devices one at a time</div>
+        <div class="step-body">Disconnect the camera, then the streaming computer, then any instrument DI. The moment the hum stops, you've found the culprit.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Use an XLR ground-lift or isolation transformer</div>
+        <div class="step-body">Put a passive XLR isolator (Radial JDI, Whirlwind IMP, or similar) between the mixer aux out and the camera/stream input. This breaks the ground loop without affecting audio quality.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Power everything from the same circuit</div>
+        <div class="step-body">If possible, plug the mixer, camera, and streaming computer into the same wall outlet or power conditioner. Mixing circuits is the most common cause of ground loops.</div>
+      </li>
+    </ol>
+ 
+    <h3>Wireless mic dropouts or static</h3>
+    <div class="callout">
+      <div class="callout-label">⚠ Symptom</div>
+      <p>A wireless mic cuts out intermittently, sounds crackly, or loses signal when the speaker moves to a certain spot.</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-title">Check battery first</div>
+        <div class="step-body">95% of wireless issues are dead or weak batteries. Replace with fresh alkalines before anything else. Never use rechargeables in a BLX — voltage is too low.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Run a frequency scan</div>
+        <div class="step-body">Another device on the same frequency will cause dropouts. Power off the receiver, power it back on, and use the scan function to find a clean channel. Rescan weekly — the RF environment changes.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Reposition receiver antennas</div>
+        <div class="step-body">Antennas should be vertical, in a V-shape, and have line-of-sight to where the mic will be used. Don't mount receivers behind a metal rack door.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Check distance and obstacles</div>
+        <div class="step-body">BLX range is rated at 100m line-of-sight, but walls, bodies, and metal cut that drastically. If the pastor walks through the congregation, consider upgrading to QLX-D for longer reliable range.</div>
+      </li>
+    </ol>
+ 
+    <h3>Camera audio is too quiet or distorted</h3>
+    <div class="callout">
+      <div class="callout-label">⚠ Symptom</div>
+      <p>SD card recording has inaudible audio, or audio that's clipped and crunchy.</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-title">Check the camera input level setting</div>
+        <div class="step-body">If audio is quiet, the camera is probably set to <code>MIC</code> level when it should be <code>LINE</code>. Line level is 10× stronger than mic level. Distorted audio means the opposite — set to LINE and disable any +20dB boost.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Turn phantom power OFF on the camera input</div>
+        <div class="step-body">Phantom power (48V) from the camera can distort the line-level signal coming from the mixer. Always disable it on camera inputs receiving mixer audio.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Ride the camera meters, not the mixer</div>
+        <div class="step-body">Set the camera's own input gain so peaks hit around <code>−12 dB</code> on the camera's meters. The mixer's meters mean nothing to the camera — it has its own preamp.</div>
+      </li>
+    </ol>
+ 
+    <h3>Stream audio out of sync with video</h3>
+    <div class="callout">
+      <div class="callout-label">⚠ Symptom</div>
+      <p>Viewers on YouTube comment that the audio is ahead of or behind the video.</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-title">Use the Presenter's audio delay</div>
+        <div class="step-body">The Blackmagic Web Presenter has a built-in audio delay setting. Start at <code>40ms</code> and adjust in 10ms steps until the live preview is synced. Video processing almost always lags behind audio, so you're delaying audio to match.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Match frame rates end-to-end</div>
+        <div class="step-body">Camera, Presenter, and OBS must all be set to the same frame rate (usually 30p or 60p). Mixing frame rates causes drift that gets worse over a long service.</div>
+      </li>
+    </ol>
+ 
+    <h3>No sound at all</h3>
+    <div class="callout">
+      <div class="callout-label">⚠ Symptom</div>
+      <p>The mic is on, the fader is up, but nothing comes through the speakers.</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-title">Walk the signal chain from source to destination</div>
+        <div class="step-body">Mic on? Battery good? Transmitter muted? Cable seated at the receiver? XLR into the mixer channel? Channel unmuted and fader up? Main assigned? Main fader up? Speaker powered? One of these is the answer — always.</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Check the meters</div>
+        <div class="step-body">If the channel meter shows signal but the main meter doesn't, the channel isn't routed to the main bus. If the main shows signal but speakers are silent, the problem is after the mixer (cable, amp, or speaker).</div>
+      </li>
+      <li class="step">
+        <div class="step-title">Swap, don't diagnose</div>
+        <div class="step-body">If you're under time pressure, swap the cable, swap the channel, swap the mic. Fix the root cause after the service — don't try to debug during it.</div>
+      </li>
+    </ol>
+ 
+    <div class="callout">
+      <div class="callout-label">▲ Golden rule</div>
+      <p>When something breaks mid-service, stay calm and work the signal chain in order. Nine times out of ten the answer is a dead battery, a muted channel, or an unplugged cable — not a broken mixer.</p>
+    </div>
+  </section>
+ 
   <footer>
     <span>© DOTxLabs · Prepared for Christ Embassy Hamilton East</span>
     <span>www.dotxlabs.com</span>
@@ -1359,6 +1564,7 @@
 </div>
  
 <script>
+  // Desktop tabs
   const tabs = document.querySelectorAll('.tab');
   const panels = document.querySelectorAll('.panel');
   tabs.forEach(tab => {
@@ -1371,6 +1577,60 @@
     });
   });
  
+  // Mobile accordion: inject headers and wrap content
+  // Run once on load (CSS media query hides/shows accordingly)
+  const panelTitles = {
+    flow: { num: '01', title: 'Signal Flow' },
+    current: { num: '02', title: 'Current Setup' },
+    upgrade: { num: '03', title: 'Upgrade Path' },
+    mics: { num: '04', title: 'Microphones' },
+    stream: { num: '05', title: 'Stream & Record' },
+    checklist: { num: '06', title: 'Checklist' },
+    troubleshoot: { num: '07', title: 'Troubleshooting' }
+  };
+ 
+  panels.forEach((panel, idx) => {
+    const meta = panelTitles[panel.id];
+    if (!meta) return;
+ 
+    // Wrap existing content in a .panel-body
+    const body = document.createElement('div');
+    body.className = 'panel-body';
+    while (panel.firstChild) {
+      body.appendChild(panel.firstChild);
+    }
+ 
+    // Create header
+    const header = document.createElement('button');
+    header.className = 'panel-header';
+    header.type = 'button';
+    header.innerHTML =
+      '<span class="panel-header-num">' + meta.num + '</span>' +
+      '<span class="panel-header-title">' + meta.title + '</span>' +
+      '<span class="panel-header-icon">+</span>';
+ 
+    panel.appendChild(header);
+    panel.appendChild(body);
+ 
+    // First panel open by default on mobile
+    if (idx === 0) panel.classList.add('is-open');
+ 
+    header.addEventListener('click', () => {
+      const wasOpen = panel.classList.contains('is-open');
+      // Close all
+      panels.forEach(p => p.classList.remove('is-open'));
+      // Open the clicked one if it wasn't already
+      if (!wasOpen) {
+        panel.classList.add('is-open');
+        // Smooth scroll so header is in view
+        setTimeout(() => {
+          header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+      }
+    });
+  });
+ 
+  // Checklist progress
   const checkboxes = document.querySelectorAll('.check-item input[type="checkbox"]');
   const progressFill = document.getElementById('progress-fill');
   const progressCount = document.getElementById('progress-count');
