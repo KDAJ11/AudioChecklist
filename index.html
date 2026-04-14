@@ -359,6 +359,8 @@
     display: block;
   }
  
+  .scroll-hint { display: none; }
+ 
   .steps {
     list-style: none;
     counter-reset: step;
@@ -769,13 +771,131 @@
     .dotx-mark, .section-label, .rec-brand, .callout-label, .closing-label, .progress-text { color: #4a1d80 !important; }
   }
  
+  /* Tablet */
+  @media (max-width: 960px) {
+    .container { padding: 40px 28px 60px; }
+    h1 { font-size: clamp(2.2rem, 7vw, 3.6rem); }
+    .tab { min-width: 110px; padding: 12px 12px; font-size: 10px; }
+  }
+ 
+  /* Mobile */
   @media (max-width: 720px) {
-    .container { padding: 32px 20px; }
-    .compare { grid-template-columns: 1fr; }
-    .step { padding-left: 70px; }
-    .step::before { font-size: 2rem; }
-    .cover-top { flex-direction: column; align-items: flex-start; }
+    .container { padding: 28px 16px 60px; }
+ 
+    /* Cover */
+    .cover { padding: 32px 0 32px; margin-bottom: 36px; }
+    .cover-top { flex-direction: column; align-items: flex-start; margin-bottom: 36px; }
     .doc-meta { text-align: left; }
+    h1 { font-size: 2.2rem; line-height: 1; }
+    .tagline { font-size: 11px; margin-top: 16px; }
+    .prepared-for { padding: 20px 22px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .prepared-name { font-size: 1.3rem; }
+    .prepared-right { text-align: left; }
+ 
+    /* Tabs - horizontal scroll on mobile */
+    .tabs {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin-bottom: 32px;
+      padding: 5px;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex: 0 0 auto;
+      min-width: auto;
+      padding: 11px 14px;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+ 
+    /* Headings */
+    h2 { font-size: 1.7rem; }
+    h3 { font-size: 1.15rem; margin: 28px 0 12px; }
+    p { font-size: 14.5px; }
+ 
+    /* Diagram - allow horizontal scroll, keep SVG at native size */
+    .diagram-wrap {
+      padding: 36px 0 24px;
+      margin: 28px -16px 36px;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+    .diagram-wrap::before {
+      left: 16px;
+    }
+    .diagram-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 16px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(212,175,55,0.4) transparent;
+    }
+    .diagram-scroll::-webkit-scrollbar { height: 6px; }
+    .diagram-scroll::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); border-radius: 3px; }
+    .diagram-wrap svg {
+      width: 900px;
+      max-width: none;
+      min-width: 900px;
+    }
+    .scroll-hint {
+      display: block;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 12px;
+      padding: 0 16px;
+      opacity: 0.7;
+    }
+ 
+    /* Steps */
+    .step { padding: 22px 0 22px 60px; }
+    .step::before { font-size: 1.9rem; top: 22px; }
+    .step-title { font-size: 1.1rem; }
+    .step-body { font-size: 13.5px; }
+ 
+    /* Cards */
+    .rec-grid { grid-template-columns: 1fr; gap: 16px; }
+    .rec-card { padding: 22px; }
+    .rec-name { font-size: 1.15rem; }
+    .compare { grid-template-columns: 1fr; gap: 16px; }
+    .compare-col { padding: 22px; }
+ 
+    /* Callouts */
+    .callout { padding: 20px 22px; }
+ 
+    /* Checklist */
+    .check-group { padding: 22px 22px; }
+    .check-item { padding: 11px 0; gap: 12px; }
+    .check-text { font-size: 13.5px; }
+    .progress-wrap { padding: 14px 18px; top: 8px; }
+ 
+    /* Closing note */
+    .closing-note { padding: 28px 24px; margin-top: 48px; }
+    .closing-body { font-size: 1rem; line-height: 1.65; }
+    .closing-sig { flex-direction: column; align-items: flex-start; gap: 18px; }
+    .sig-name { font-size: 1.25rem; }
+ 
+    /* Footer */
+    footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 9px;
+    }
+  }
+ 
+  /* Very small phones */
+  @media (max-width: 400px) {
+    .container { padding: 24px 14px 50px; }
+    h1 { font-size: 1.95rem; }
+    h2 { font-size: 1.5rem; }
+    .tab { padding: 10px 12px; font-size: 9px; }
   }
 </style>
 </head>
@@ -823,6 +943,7 @@
     <p>The mixer sits at the center of everything. From it, audio splits in three directions: to the speakers in the sanctuary, to the camera for on-card recording, and to the streaming encoder for live broadcast. Get this routing right and the rest of the system becomes predictable.</p>
  
     <div class="diagram-wrap">
+      <div class="diagram-scroll">
       <svg viewBox="0 0 1000 540" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
@@ -902,6 +1023,8 @@
  
         <text x="500" y="500" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#a89cc4" font-style="italic">One source, three destinations — the mixer is the single point of truth for all audio routing.</text>
       </svg>
+      </div>
+      <span class="scroll-hint">← swipe to explore →</span>
     </div>
  
     <div class="callout">
